@@ -15,6 +15,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
     steps:
       - name: Check out source
         uses: actions/checkout@v6
@@ -36,8 +39,8 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: "1"
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
-        run: pnpm build
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: NEXT_PUBLIC_SITE_URL="${PAGES_BASE_URL/#http:/https:}" pnpm build
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:
